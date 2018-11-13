@@ -17,7 +17,7 @@ if (!isset($_SESSION['ID']) && $_SESSION['ID'] == NULL) {
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="dashboard.php">Dashboard</a>
     <a href="reserveringen.php">Kalender</a>
-    <a href="contact.php">Voorraad</a>
+    <a href="voorraad.php">Voorraad</a>
     <a href="logout.php">Afmelden</a>
     </div>
 <script>
