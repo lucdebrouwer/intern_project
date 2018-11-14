@@ -8,8 +8,8 @@ class Database
   // Define a private instance
   private $host = "localhost";           // PDO host
   private $db_name = "Intern";            // Name of the PDO Database
-  private $username = "brlu-intern";     // Username of user
-  private $password = "Welkom2018!!";    // Password of PDO database, 
+  private $username = "root";     // Username of user
+  private $password = "";    // Password of PDO database, 
   private $socket_type = "mysql";        // The type of database(can be mysql, sqlite etc)
   private $instance = NULL;              // The actual instance of the class
 
@@ -57,7 +57,7 @@ class Database
     {
       if(!empty($naam) && !empty($afkorting) && !empty($hashed_wachtwoord) && !empty($rol))
       {
-        $sql = "INSERT INTO gebruikers (naam, afkorting, wachtwoord, rolID) VALUES(?, ?, ?, ?)";
+        $sql = "INSERT INTO gebruikers (gebruikersnaam, afkorting, wachtwoord, rol_id) VALUES(?, ?, ?, ?)";
         try
         {
           $query = $this->instance->prepare($sql);

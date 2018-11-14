@@ -108,7 +108,7 @@ if(isset($_POST['naam_']) && isset($_POST['username_']) && isset($_POST['passwor
             </div>
             <div class="form-group row">
                <div class="offset-4 col-8">
-                  <button name="send" type="submit" class="btn btn-primary">Login</button>
+                  <button name="send" type="submit" class="btn btn-primary">Register</button>
                </div>
             </div>
          </form>

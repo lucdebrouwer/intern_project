@@ -6,11 +6,18 @@
 		<title>Kalender</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
-		<script src="main.js"></script>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">	
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>	
 	</head>
 	<body>
+	<div class="container">		
 	<?php 
 	session_start();
 	if(!isset($_SESSION['USER']) || !isset($_SESSION['ID'])) 
@@ -35,12 +42,16 @@
 		if (!isset($_REQUEST["year"])) $_REQUEST["year"] = date("Y");
 	?>
 	<?php
+	// Haal de huidige maand en jaar op
 		$cMonth = $_REQUEST["month"];
 		$cYear = $_REQUEST["year"];
+
 		$prev_year = $cYear;
 		$next_year = $cYear;
+
 		$prev_month = $cMonth-1;
 		$next_month = $cMonth+1;
+
 		if ($prev_month == 0 ) {
 			$prev_month = 12;
 			$prev_year = $cYear - 1;
@@ -50,59 +61,51 @@
 			$next_year = $cYear + 1;
 		}
 	?>
-	<table class="table">
-		<tr align="center">
-			<td bgcolor="#999999" style="color:#FFFFFF">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-				<td width="50%" align="left">  <a href="<?php echo $_SERVER["PHP_SELF"] . "?month=". $prev_month . "&year=" . $prev_year . "&day=" . "1"; ?>" style="color:#FFFFFF">Previous</a></td>
-				<td width="50%" align="right"><a href="<?php echo $_SERVER["PHP_SELF"] . "?month=". $next_month . "&year=" . $next_year . "&day=" . "1"; ?>" style="color:#FFFFFF">Next</a>  </td>
-				</tr>
-				</table>
-			</td>
+
+	<div class="month">
+		<ul>
+			<li class="prev"><a href="<?php echo $_SERVER["PHP_SELF"] . "?month=". $prev_month . "&year=" . $prev_year . "&day=" . "1"; ?>">&#10094; Previous</a></li>
+			<li class="next"><a href="<?php echo $_SERVER["PHP_SELF"] . "?month=". $next_month . "&year=" . $next_year . "&day=" . "1"; ?>">&#10095; Next</a></li>
+			<li><?php echo "<span>". $monthNames[$cMonth-1].'</span> ' . '<br>' . '<span> '.$cYear . '</span>'; ?></li>
+		</ul>
+	</div>
+	<div id="myTable" class="table-responsive">
+		<table class="table table-bordered">		
+		<tr class="weekdays">		
+			<th>Mo</th>
+			<th>Tu</th>
+			<th>We</th>
+			<th>Th</th>
+			<th>Fr</th>
+			<th>Sa</th>
+			<th>Su</th>
 		</tr>
-		<tr>
-			<td align="center">
-				<table class="table-bordered">
-					<tr align="center">
-						<td colspan="7" bgcolor="#999999" style="color:#FFFFFF">
-						<strong> <?php echo $monthNames[$cMonth-1].' '.$cYear; ?> </strong>
-						</td>
-					</tr>
-					<tr>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Zo</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Ma</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Di</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Wo</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Do</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Vr</strong></td>
-						<td align="center" bgcolor="#999999" style="color:#FFFFFF"><strong>Za</strong></td>
-					</tr>
-				<?php 
-				$timestamp = mktime(0,0,0,$cMonth,1,$cYear);
-				$maxday = date("t",$timestamp);
-				$thismonth = getdate ($timestamp);
-				$startday = $thismonth['wday'];
-				for ($i=0; $i<($maxday+$startday); $i++) {
-					if(($i % 7) == 0 ) echo "<tr> ";
-					if($i < $startday) echo "<td></td> ";
+
+	<?php 
+			$timestamp = mktime(0,0,0,$cMonth,1,$cYear);
+			$maxday = date("t",$timestamp);
+			$thismonth = getdate ($timestamp);
+			$startday = $thismonth['wday'];
+			for ($i=0; $i<($maxday+$startday); $i++) {
+
+				if(($i % 7) == 0 ) echo "<tr> ";
+				if($i < $startday) echo "<td></td> ";
+				
+				else {
+					$cMonth = $_REQUEST["month"];
+					$cYear = $_REQUEST["year"];
 					
-					else {
-						$cMonth = $_REQUEST["month"];
-						$cYear = $_REQUEST["year"];
-						echo "<td align='center' valign='middle' height='20px'>". "<a href=" . $_SERVER['PHP_SELF'] . "?month=" . $cMonth . "&year=" .$cYear . "&day=" . ($i - $startday +1) . ">" . ($i - $startday + 1) . "</a>" . "</td> ";
-					}
-					if(($i % 7) == 6 ) echo "</tr> ";
+					echo "<td class='mytd'>". "<a class='myA' href=" . $_SERVER['PHP_SELF'] . "?month=" . $cMonth . "&year=" .$cYear . "&day=" . ($i - $startday +1) . ">" . ($i - $startday + 1) . "</a>" . "</td> ";
 				}
-				?>
-				</table>
-			</td>
-		</tr>
+				if(($i % 7) == 6 ) echo "</tr> ";
+			}
+	?>
 	</table>
 	<?php
 		$cDay = $_REQUEST["day"];
+
 		if ($cDay < 10) {
-			$cDay = "0" . $cDay;
+			$cDay = "" . $cDay;
 			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
 		}
 		else 
@@ -114,14 +117,12 @@
 	
 		if ($count > 0)
 		{
-			
+			echo "<div class='table-responsive'>";
+			echo "<p align='center'>Brengen naar:</a>";
+			echo "<table class='table table-bordered'>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
 			while ($row = $query->fetch())
 			{
-				
-				echo "<p align='center'>Brengen naar:</a>";
-				echo "<table border='1' cellpadding='10' align='center'>";
-				echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
-				
 					echo "<tr>";
 					echo '<td>' . $row[9] . '</td>';
 					echo '<td>' . $row[14] . '</td>';
@@ -131,8 +132,10 @@
 					echo '<td>' . $row[6] . '</td>';
 					echo '<td>' . $row[7] . '</td>';
 					echo "</tr>";
-					echo "</table>";
 			}
+
+			echo "</table>";
+			echo "</div>";
 		}
 		else {
 			echo "<p align='center'>Vandaag hoeft er niks worden gebracht.</p><br/><br/>";
@@ -143,11 +146,13 @@
 		
 		if ($count > 0)
 		{
+			echo "<div class='table-responsive'>";
+			echo "<p align='center'>Komt terug:</a>";
+			echo "<table class='table table-bordered'>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
 			while ($row = $query->fetch())
 			{
-				echo "<p align='center'>Komt terug:</a>";
-				echo "<table border='1' cellpadding='10' align='center'>";
-				echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
+
 				
 					echo "<tr>";
 					echo '<td>' . $row[9] . '</td>';
@@ -158,25 +163,45 @@
 					echo '<td>' . $row[6] . '</td>';
 					echo '<td>' . $row[7] . '</td>';
 					echo "</tr>";
-					echo "</table>";
+
 			}
+			echo "</table>";
+			echo "</div>";			
 		}
 		else {
 			echo "<p align='center'>Vandaag hoeft er niks worden opgehaald.</p><br/><br/>";
 		}
+
 		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'")
 		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'")
 		
 		
-	?>
+	?>	
+	</div>
+	<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+		<script src="js/main.js"></script>
 		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-		<!-- Popper JS -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 
-		<!-- Latest compiled JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>		
+		</div>	
+
 	<body>
 </html>
 
