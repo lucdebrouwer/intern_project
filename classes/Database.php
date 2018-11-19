@@ -46,7 +46,7 @@ class Database
   public function register($naam, $afkorting, $hashed_wachtwoord, $rol)
   {
     // Check if user already exists in database
-    $query = $this->query("SELECT * FROM gebruikers WHERE naam='".$naam."'");
+    $query = $this->query("SELECT * FROM gebruikers WHERE afkorting='".$afkorting."'");
     $query->execute();
     $result = $query->rowCount();
 
@@ -71,5 +71,22 @@ class Database
       }
     }
   } 
+
+  public function insertProducts($naam, $omschrijving, $categorie_id, $product_amount) {
+
+    if(!empty($naam) && !empty($omschrijving) && !empty($categorie_id) && !empty($product_amount)) {
+      $sql = "INSERT INTO producten(naam, omschrijving, categorie_id, product_amount) VALUES(?, ?, ?, ?)";
+      try
+      {
+        $query = $this->instance->prepare($sql);
+        $query->execute([$naam, $omschrijving, $categorie_id, $product_amount]);
+      }
+      catch(PDOException $ex)
+      {
+        echo $ex->getMessage();      
+      }
+    }
+
+  }
 }
 ?>

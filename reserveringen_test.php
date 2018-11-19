@@ -11,13 +11,13 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!-- Popper JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script> -->
 
 <!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>	
+
 	</head>
 	<body>
-	<div class="container">		
+	<div class="container-fluid">		
 	<?php 
 	session_start();
 	if(!isset($_SESSION['USER']) || !isset($_SESSION['ID'])) 
@@ -40,6 +40,8 @@
 	<?php
 		if (!isset($_REQUEST["month"])) $_REQUEST["month"] = date("n");
 		if (!isset($_REQUEST["year"])) $_REQUEST["year"] = date("Y");
+
+		//echo $_SERVER['PHP_SELF'] .= '?month=' . $_REQUEST['month'] . '?year=' . $_REQUEST['year'] . '?day=' . $_REQUEST['day'];
 	?>
 	<?php
 	// Haal de huidige maand en jaar op
@@ -61,7 +63,93 @@
 			$next_year = $cYear + 1;
 		}
 	?>
+	<div class="row">
+		<div class="col-lg-12">
+		<button class="btn btn-primary">Hide Data</button>
+		<button class="btn btn-info">Show Data</button>
+		<?php
+		if(!isset($_REQUEST['day'])) {
+			$_REQUEST['day'] = 1;
+		}
+		$cDay = $_REQUEST["day"];
+		if ($cDay < 10) {
+			$cDay = "" . $cDay;
+			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
+		}
+		else 
+			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
+		
+		
+		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
+		$count = $query->rowCount();
+	
+		if ($count > 0)
+		{
+			echo "<div class='table-responsive dataTable'>";
+			echo "<p align='center'>Brengen naar:</a>";
+			echo "<table class='table table-bordered'>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
+			while ($row = $query->fetch())
+			{
+					echo "<tr>";
+					echo '<td>' . $row[9] . '</td>';
+					echo '<td>' . $row[14] . '</td>';
+					echo '<td>' . $row[3] . '</td>';
+					echo '<td>' . $row[4] . '</td>';
+					echo '<td>' . $row[5] . '</td>';
+					echo '<td>' . $row[6] . '</td>';
+					echo '<td>' . $row[7] . '</td>';
+					echo "</tr>";
+			}
 
+			echo "</table>";
+			echo "</div>";
+		}
+		else {
+			echo "<p align='center'>Vandaag hoeft er niks worden gebracht.</p><br/><br/>";
+		}
+
+		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
+		$count = $query->rowCount("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'");
+		
+		if ($count > 0)
+		{
+			echo "<div class='table-responsive dataTable'>";
+			echo "<p align='center'>Komt terug:</a>";
+			echo "<table class='table table-bordered'>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
+			while ($row = $query->fetch())
+			{
+
+				
+					echo "<tr>";
+					echo '<td>' . $row[9] . '</td>';
+					echo '<td>' . $row[14] . '</td>';
+					echo '<td>' . $row[3] . '</td>';
+					echo '<td>' . $row[4] . '</td>';
+					echo '<td>' . $row[5] . '</td>';
+					echo '<td>' . $row[6] . '</td>';
+					echo '<td>' . $row[7] . '</td>';
+					echo "</tr>";
+
+			}
+			echo "</table>";
+			echo "</div>";			
+		}
+		else {
+			echo "<p align='center'>Vandaag hoeft er niks worden opgehaald.</p><br/><br/>";
+		}
+
+		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'")
+		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'")
+		
+		
+	?>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
 	<div class="month">
 		<ul>
 			<li class="prev"><a href="<?php echo $_SERVER["PHP_SELF"] . "?month=". $prev_month . "&year=" . $prev_year . "&day=" . "1"; ?>">&#10094; Previous</a></li>
@@ -101,107 +189,12 @@
 			}
 	?>
 	</table>
-	<?php
-		$cDay = $_REQUEST["day"];
-
-		if ($cDay < 10) {
-			$cDay = "" . $cDay;
-			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
-		}
-		else 
-			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
-		
-		
-		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
-		$count = $query->rowCount();
-	
-		if ($count > 0)
-		{
-			echo "<div class='table-responsive'>";
-			echo "<p align='center'>Brengen naar:</a>";
-			echo "<table class='table table-bordered'>";
-			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
-			while ($row = $query->fetch())
-			{
-					echo "<tr>";
-					echo '<td>' . $row[9] . '</td>';
-					echo '<td>' . $row[14] . '</td>';
-					echo '<td>' . $row[3] . '</td>';
-					echo '<td>' . $row[4] . '</td>';
-					echo '<td>' . $row[5] . '</td>';
-					echo '<td>' . $row[6] . '</td>';
-					echo '<td>' . $row[7] . '</td>';
-					echo "</tr>";
-			}
-
-			echo "</table>";
-			echo "</div>";
-		}
-		else {
-			echo "<p align='center'>Vandaag hoeft er niks worden gebracht.</p><br/><br/>";
-		}
-
-		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
-		$count = $query->rowCount("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'");
-		
-		if ($count > 0)
-		{
-			echo "<div class='table-responsive'>";
-			echo "<p align='center'>Komt terug:</a>";
-			echo "<table class='table table-bordered'>";
-			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
-			while ($row = $query->fetch())
-			{
-
-				
-					echo "<tr>";
-					echo '<td>' . $row[9] . '</td>';
-					echo '<td>' . $row[14] . '</td>';
-					echo '<td>' . $row[3] . '</td>';
-					echo '<td>' . $row[4] . '</td>';
-					echo '<td>' . $row[5] . '</td>';
-					echo '<td>' . $row[6] . '</td>';
-					echo '<td>' . $row[7] . '</td>';
-					echo "</tr>";
-
-			}
-			echo "</table>";
-			echo "</div>";			
-		}
-		else {
-			echo "<p align='center'>Vandaag hoeft er niks worden opgehaald.</p><br/><br/>";
-		}
-
-		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'")
-		//$result = mysqli_query($conn, "SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'")
-		
-		
-	?>	
-	</div>
-	<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
-        </div>
-        <div class="modal-body">
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>	  
 		<script src="js/main.js"></script>
 		<!-- jQuery library -->
-
-
+		</div>
+		</div>
 		</div>	
-
 	<body>
 </html>
 
