@@ -7,7 +7,7 @@ class Database
   
   // Define a private instance
   private $host = "localhost";           // PDO host
-  private $db_name = "Intern";            // Name of the PDO Database
+  private $db_name = "project_leerjaar_3";            // Name of the PDO Database
   private $username = "root";     // Username of user
   private $password = "";    // Password of PDO database, 
   private $socket_type = "mysql";        // The type of database(can be mysql, sqlite etc)

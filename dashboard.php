@@ -6,6 +6,9 @@
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
     <script src="main.js"></script>
 </head>
@@ -49,7 +52,7 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
                     <div class="col-lg-12">
                     <h1>Voorraad</h1>
                         <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table id="dashboard_table" class="table table-striped">
                                 <thead >
                                     <tr>
                                         <th>ID</th>
@@ -137,6 +140,24 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
     </div>
   </div>
 <script>
+
+    $(document).ready( function () {
+    $('#dashboard_table').DataTable({
+        pageLength : 5,
+        lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']],
+        language:{
+            "sSearch": "Zoeken:",
+            "lengthMenu": " _MENU_ producten per pagina",
+            "zeroRecords" : "Sorry, er zijn geen producten.",
+            "info" : "Pagina _PAGE_ van de _PAGES_",
+            paginate: {
+                "previous": "Vorige",
+                "next": "Volgende"
+            }
+        }
+    })
+    });
+
     function openNav() {
         document.getElementById("mySidenav").style.width = "20.6em";
     }
@@ -145,8 +166,8 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
         document.getElementById("mySidenav").style.width = "0";
     }
 </script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script></div>
 </body>
 </html>
