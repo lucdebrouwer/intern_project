@@ -16,7 +16,7 @@
 <?php 
 session_start();
 if(!isset($_SESSION['USER']) || !isset($_SESSION['ID'])) 
-{
+{ 
     header("Location: index.php");
 }
 ?>

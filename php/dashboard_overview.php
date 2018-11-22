@@ -6,7 +6,7 @@ $db = new Database;
 $query = $db->query("SELECT * FROM producten");
 
 $count = $query->rowCount();
-if($count > 0) {
+if($count > 0) { 
     while($row = $query->fetch())
     {
         echo "<tr>";
