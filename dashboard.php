@@ -11,6 +11,9 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
     <script src="main.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 <body>  
 <?php 
@@ -112,6 +115,26 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
             <div class="jumbotron">
                 <h3>Dayview</h3>
                 <hr>
+                <div id="reportrange">
+                    <i class="fa fa-calendar"></i>&nbsp;
+                    <span id="date_range"></span> <i class="fa fa-caret-down"></i>
+                </div>
+                <div class="table-responsive">
+                            <table id="dayview_table" class="table table-striped">
+                                <thead >
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Naam</th>
+                                        <th>CategorieID</th>
+                                        <th>Hoeveelheid</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php require_once('php/DayView.php');?>
+                                </tbody>
+                            </table>    
+                        </div>
             </div>
         </div>
     </div>
@@ -141,6 +164,7 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
   </div>
 <script>
 
+// functionaliteit voor het search, pagination voor de voorraad tabel.
     $(document).ready( function () {
     $('#dashboard_table').DataTable({
         pageLength : 5,
@@ -152,12 +176,14 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
             "info" : "Pagina _PAGE_ van de _PAGES_",
             paginate: {
                 "previous": "Vorige",
-                "next": "Volgende"
+                "next": "Volgende",
             }
         }
-    })
+    });
     });
 
+    
+// functionaliteit voor het hamburger menu.
     function openNav() {
         document.getElementById("mySidenav").style.width = "20.6em";
     }
@@ -165,9 +191,37 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
     function closeNav() {
         document.getElementById("mySidenav").style.width = "0";
     }
-</script>
-<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script></div>
+
+// functionaliteit voor de dayview filters.
+    $(function() {
+
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+    startDate: start,
+    endDate: end,
+    ranges: {
+       'Vandaag': [moment(), moment()],
+       'Gisteren': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+       'Laatste 7 Dagen': [moment().subtract(6, 'days'), moment()],
+       'Laatste 30 Dagen': [moment().subtract(29, 'days'), moment()],
+       'Deze maand': [moment().startOf('month'), moment().endOf('month')],
+       'Vorige Maand': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+    }, cb);
+
+    cb(start, end);
+
+    });     
+    </script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script></div>
+
 </body>
 </html>

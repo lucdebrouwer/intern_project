@@ -170,3 +170,27 @@ h3 {
 .myAlignment {
     padding: 1em;
 }
+
+mark {
+    padding: 0px;
+    background-color: rgb(255, 201, 14);
+}
+
+#reportrange {
+    background: white; 
+    cursor: pointer; 
+    padding: 5px 10px; 
+    border: 1px solid #ccc; 
+    width: 60%;
+    border-radius: 5px;
+}
+
+#date_range{
+    color: black;
+    font-size: 15px;
+}
+
+#dayview_table {
+    margin-top: 10px;
+    width: 100%;
+}
