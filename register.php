@@ -1,19 +1,9 @@
 <?php
 session_start();
-/**
- * // Check of gebruiker stagiar / beheerder is
- * if($SESSION['LOGGED_IN'] == true && $_SESSION['ROLE'] >= 2)
- * {
- *    // if beheerder allow access 
- *    // showpage
- * }
- * else{
- *    // else deny access
- *    // header("Location: index.php");
- *    // throw new Exception("Access was denied");
- *}
- * 
- */
+if(!isset($_SESSION['USER']) || !isset($_SESSION['ID'])) 
+{ 
+    header("Location: index.php");
+}
 require('classes/Database.php');
 require('classes/LoginSystem.php');
 
@@ -29,6 +19,7 @@ $main_token = password_hash($_SESSION['TOKEN'], PASSWORD_DEFAULT);
 
 if(isset($_POST['naam_']) && isset($_POST['username_']) && isset($_POST['password_']))
 {
+    
     if(isset($_POST['token']) == $main_token) 
     {
         $naam = $loginSystem->clean($_POST['naam_']);
@@ -38,13 +29,14 @@ if(isset($_POST['naam_']) && isset($_POST['username_']) && isset($_POST['passwor
         if($naam != "" && $username != "" && $password != "") 
         {
             $hashed_password = $loginSystem->encryptPass($password);
-            $rol = 2; 
+            $rol = 1; 
             // rollen
              // 1 = docent
              // 2 = stagiar / beheerder
             if($db->register($naam, $username, $hashed_password, $rol))
             {
                 header("Location: index.php");
+                
             }
             //var_dump($_SESSION['TOKEN']);
         }

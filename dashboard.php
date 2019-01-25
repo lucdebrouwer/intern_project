@@ -24,25 +24,7 @@ if(!isset($_SESSION['USER']) || !isset($_SESSION['ID']))
 }
 ?>
 <div class="container-fluid">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-            <span style="font-size:30px;cursor:pointer" onclick="openNav()" id="mySideNav">&#9776; Menu</span>
-                <div id="mySidenav" class="sidenav">
-                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                <a href="dashboard.php">Dashboard</a>
-                <a href="reserveringen.php">Kalender</a>
-                <a href="contact.php">Voorraad</a>
-                <a href="logout.php">Afmelden</a>
-                </div>
-            </div> 
-            <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <img id="summaLogo" alt="Brand" src="summa200.png">
-            </a>
-            </div>                         
-        </div>
-    </nav>      
+     <?php include 'inc/nav.php';?>
     <div class="row" class="myAlignment">
         <div class="col-lg-12">
             <div class="jumbotron">

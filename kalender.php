@@ -80,20 +80,24 @@
 			$searchdate = $cYear . "-" . $cMonth . "-" . $cDay;
 		
 		
-		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
+		//$query = $db->query("SELECT * FROM reserveringen WHERE datum_nodig = '". $searchdate . "'");
+		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.gebruikersID INNER JOIN producten ON reserveringen.product_id = producten.productID WHERE datum_nodig = '" . $searchdate . "'");
 		$count = $query->rowCount();
+		//$res = $query->fetch();
+		//var_dump($res);
+		//var_dump($query);
 	
 		if ($count > 0)
 		{
 			echo "<div class='table-responsive dataTable'>";
 			echo "<p align='center'>Brengen naar:</a>";
 			echo "<table class='table table-bordered'>";
-			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum nodig</th> <th>Datum terug</th> <th>Datum bestelling</th> <th>Locatie</th></tr>";
 			while ($row = $query->fetch())
 			{
 					echo "<tr>";
 					echo '<td>' . $row[9] . '</td>';
-					echo '<td>' . $row[14] . '</td>';
+					echo '<td>' . $row[2] . '</td>';
 					echo '<td>' . $row[3] . '</td>';
 					echo '<td>' . $row[4] . '</td>';
 					echo '<td>' . $row[5] . '</td>';
@@ -109,28 +113,26 @@
 			echo "<p align='center'>Vandaag hoeft er niks worden gebracht.</p><br/><br/>";
 		}
 
-		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date like" . "'" . $searchdate . "'");
-		$count = $query->rowCount("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.id INNER JOIN producten ON reserveringen.product_id = producten.id WHERE date_back like" . "'" . $searchdate . "'");
+		$query = $db->query("SELECT * FROM reserveringen INNER JOIN gebruikers ON reserveringen.gebruikers_id=gebruikers.gebruikersID INNER JOIN producten ON reserveringen.product_id = producten.productID WHERE datum_terug = '" . $searchdate . "'");
+		$count = $query->rowCount();
 		
 		if ($count > 0)
 		{
 			echo "<div class='table-responsive dataTable'>";
 			echo "<p align='center'>Komt terug:</a>";
 			echo "<table class='table table-bordered'>";
-			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum</th> <th>Datum bestelling</th> <th>Datum terug</th> <th>Locatie</th></tr>";
+			echo "<tr> <th>Gebruiker</th> <th>Product</th> <th>Aantal</th> <th>Datum nodig</th> <th>Datum terug</th> <th>Datum bestelling</th> <th>Locatie</th></tr>";
 			while ($row = $query->fetch())
 			{
 
-				
-					echo "<tr>";
-					echo '<td>' . $row[9] . '</td>';
-					echo '<td>' . $row[14] . '</td>';
-					echo '<td>' . $row[3] . '</td>';
-					echo '<td>' . $row[4] . '</td>';
-					echo '<td>' . $row[5] . '</td>';
-					echo '<td>' . $row[6] . '</td>';
-					echo '<td>' . $row[7] . '</td>';
-					echo "</tr>";
+				echo '<td>' . $row[9] . '</td>';
+				echo '<td>' . $row[2] . '</td>';
+				echo '<td>' . $row[3] . '</td>';
+				echo '<td>' . $row[4] . '</td>';
+				echo '<td>' . $row[5] . '</td>';
+				echo '<td>' . $row[6] . '</td>';
+				echo '<td>' . $row[7] . '</td>';
+				echo "</tr>";
 
 			}
 			echo "</table>";

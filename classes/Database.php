@@ -57,7 +57,7 @@ class Database
     {
       if(!empty($naam) && !empty($afkorting) && !empty($hashed_wachtwoord) && !empty($rol))
       {
-        $sql = "INSERT INTO gebruikers (gebruikersnaam, afkorting, wachtwoord, rol_id) VALUES(?, ?, ?, ?)";
+        $sql = "INSERT INTO gebruikers(naam, afkorting, wachtwoord, rolID) VALUES(?, ?, ?, ?)";
         try
         {
           $query = $this->instance->prepare($sql);
@@ -88,5 +88,20 @@ class Database
     }
 
   }
+
+public function insertBestelling($gebruikersID, $productID, $quantity, $datumNodig, $datumTerug, $datumOrdered, $lokaal) {
+  if(!empty($gebruikersID) && !empty($productID) && !empty($quantity) && !empty($datumNodig) && !empty($datumTerug) && !empty($datumOrdered) && !empty($lokaal)) {
+    $sql = "INSERT INTO reserveringen(gebruikers_id, product_id, amount, datum_nodig, datum_terug, datum_ordered, lokaal) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    try
+    {
+      $query = $this->instance->prepare($sql);
+      $query->execute([$gebruikersID, $productID, $quantity, $datumNodig, $datumTerug, $datumOrdered, $lokaal]);
+    }
+    catch(PDOException $ex)
+    {
+      echo $ex->getMessage();
+    }
+  }
+}
 }
 ?>

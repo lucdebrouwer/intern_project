@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const div = document.querySelector('.container-fluid');
 const dataTables = document.querySelectorAll('.dataTable');
 
@@ -28,7 +27,3 @@ if (event.target.tagName === 'BUTTON') {
 
     }
 })
-=======
-const table = document.querySelector('#myTable');
-console.log(table);
->>>>>>> 3f93522af01a9e56a4416221748d6b099f7a925b
